@@ -15,11 +15,13 @@
   padding: 0;
   box-sizing: border-box;
   font-family: "Pretendard", sans-serif;
+  -webkit-tap-highlight-color: transparent;
 }
 body {
   background: var(--bg);
   color: var(--text);
   overflow-x: hidden;
+  width: 100%;
 }
 button {
   cursor: pointer;
@@ -27,7 +29,10 @@ button {
   background: none;
 }
 
-/* 헤더: 컴팩트 유지 */
+/* =========================================
+   [PC 기본 스타일]
+   ========================================= */
+
 header {
   position: fixed;
   top: 0;
@@ -84,7 +89,6 @@ header {
   align-items: center;
 }
 
-/* 히어로 섹션 */
 .hero-section {
   position: relative;
   width: 100%;
@@ -112,6 +116,8 @@ header {
   background: rgba(255, 255, 255, 0.7);
   padding: 40px 60px;
   backdrop-filter: blur(5px);
+  width: auto;
+  max-width: 90%;
 }
 .hero-text h1 {
   font-size: 50px;
@@ -126,7 +132,6 @@ header {
   color: #333;
 }
 
-/* 컨트롤 패널 */
 .sticky-control {
   position: sticky;
   top: 60px;
@@ -135,6 +140,7 @@ header {
   border-bottom: 1px solid var(--border);
   padding: 12px 0;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
 }
 .control-inner {
   display: flex;
@@ -147,12 +153,12 @@ header {
   padding: 0 20px;
 }
 
-/* [수정] 예산 그룹: 슬라이더 포함을 위해 정렬 방식 변경 */
 .budget-group {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 5px;
+  transition: all 0.3s ease;
 }
 .budget-top-row {
   display: flex;
@@ -201,6 +207,7 @@ header {
   font-size: 19px;
   font-weight: 700;
   outline: none;
+  background: transparent;
 }
 .min-msg {
   font-size: 10px;
@@ -209,7 +216,6 @@ header {
   align-self: flex-start;
 }
 
-/* [수정] 슬라이더 스타일 (왼쪽으로 이동됨) */
 .slider {
   width: 100%;
   height: 4px;
@@ -217,7 +223,6 @@ header {
   cursor: pointer;
 }
 
-/* [수정] 게이지 그룹: 슬라이더 제거하고 순수 현황판으로 변경 */
 .gauge-group {
   width: 380px;
   display: flex;
@@ -294,7 +299,6 @@ input:checked + .slider-toggle:before {
   transform: translateX(20px);
 }
 
-/* 매처 섹션 */
 .matcher-section {
   position: relative;
   padding: 20px 0 40px 0;
@@ -317,7 +321,6 @@ input:checked + .slider-toggle:before {
   pointer-events: none;
 }
 
-/* 행 높이 */
 .match-row {
   position: relative;
   width: 100%;
@@ -351,6 +354,7 @@ input:checked + .slider-toggle:before {
   align-items: center;
   transition: 0.2s;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
 }
 .scroll-arrow:hover {
   background: black;
@@ -380,7 +384,6 @@ input:checked + .slider-toggle:before {
   display: none;
 }
 
-/* 카드 크기 */
 .card {
   flex: 0 0 290px;
   height: 350px;
@@ -399,8 +402,6 @@ input:checked + .slider-toggle:before {
   align-items: center;
   justify-content: center;
 }
-
-/* 활성 카드 */
 .card.active {
   opacity: 1;
   transform: scale(1.1);
@@ -408,8 +409,6 @@ input:checked + .slider-toggle:before {
   box-shadow: 0 18px 45px rgba(0, 0, 0, 0.12);
   border: 1px solid black;
 }
-
-/* 이미지 영역 */
 .img-box {
   width: 100%;
   height: 260px;
@@ -477,7 +476,7 @@ input:checked + .slider-toggle:before {
   color: #555;
 }
 
-/* 오버레이 & 모달 */
+/* [PC용 모달 설정] */
 .overlay {
   position: fixed;
   top: 0;
@@ -497,16 +496,38 @@ input:checked + .slider-toggle:before {
   padding: 40px;
   text-align: center;
   border-radius: 8px;
+  max-width: 90%;
 }
 .modal-detail-box {
   background: white;
   width: 1000px;
-  max-width: 90%;
+  max-width: 95%;
   height: 600px;
   display: flex;
   position: relative;
   overflow: hidden;
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+}
+.close-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  z-index: 100;
+  font-size: 0;
+  width: 36px;
+  height: 36px;
+  background: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+.close-btn svg {
+  width: 20px;
+  height: 20px;
+  stroke: black;
 }
 
 .modal-btn-group {
@@ -534,6 +555,11 @@ input:checked + .slider-toggle:before {
   font-weight: 600;
 }
 
+.detail-layout {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
 .detail-left {
   flex: 1.2;
   background: #f9f9f9;
@@ -549,8 +575,6 @@ input:checked + .slider-toggle:before {
   object-fit: contain;
   mix-blend-mode: multiply;
 }
-
-/* Video Overlay */
 .video-overlay {
   position: absolute;
   top: 0;
@@ -558,7 +582,7 @@ input:checked + .slider-toggle:before {
   width: 100%;
   height: 100%;
   background: #f9f9f9;
-  z-index: 10;
+  z-index: 50;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -605,22 +629,22 @@ input:checked + .slider-toggle:before {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   cursor: pointer;
 }
-.close-video:hover {
-  background: #f0f0f0;
-}
 
+/* PC 레이아웃 설정: 텍스트 -> 버튼 -> 구매그룹 */
 .detail-right {
   flex: 0.8;
   padding: 50px;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
 }
-.close-btn {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  font-size: 24px;
+.d-scroll-area {
+  order: 1;
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 5px;
 }
+
 .d-top {
   border-bottom: 1px solid #eee;
   padding-bottom: 20px;
@@ -640,33 +664,44 @@ input:checked + .slider-toggle:before {
   font-size: 24px;
   font-weight: 700;
 }
-.d-mid {
-  flex: 1;
-  overflow-y: auto;
-}
 .d-desc {
   font-size: 15px;
   line-height: 1.6;
   color: #444;
+  word-break: keep-all;
   margin-bottom: 20px;
 }
+
+/* AI 버튼 (PC: 텍스트 아래) */
 .video-btn {
+  order: 2;
+  margin: 15px 0;
   display: inline-flex;
+  justify-content: center;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   padding: 8px 16px;
-  background: #eee;
+  background: #f0f0f0;
   border-radius: 20px;
   font-size: 12px;
   font-weight: 700;
+  color: #333;
   transition: 0.2s;
+  width: fit-content;
+  align-self: flex-start;
 }
 .video-btn:hover {
-  background: #ddd;
+  background: #e0e0e0;
 }
 
-.d-bot {
-  margin-top: 20px;
+.d-fixed-group {
+  order: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.action-row {
   display: flex;
   gap: 10px;
 }
@@ -695,15 +730,13 @@ input:checked + .slider-toggle:before {
   font-size: 16px;
   transition: 0.2s;
 }
-.add-btn:hover {
-  opacity: 0.8;
-}
 
 .cart-drawer {
   position: fixed;
   top: 0;
   right: 0;
   width: 400px;
+  max-width: 100%;
   height: 100%;
   background: white;
   z-index: 2001;
@@ -785,4 +818,221 @@ footer {
   padding: 60px 40px;
   text-align: center;
   font-size: 12px;
+}
+
+/* =========================================
+   [📱 모바일 반응형 스타일 (화면폭 768px 이하)]
+   ========================================= */
+@media screen and (max-width: 768px) {
+  /* 상단 공통 스타일 */
+  header {
+    height: 50px;
+    padding: 0 20px;
+  }
+  .logo {
+    font-size: 18px;
+  }
+  .h-right {
+    gap: 10px;
+    font-size: 12px;
+  }
+  .nav-link {
+    font-size: 12px;
+  }
+
+  .hero-section {
+    height: 400px;
+    margin-top: 50px;
+  }
+  .hero-text {
+    padding: 20px;
+    width: 90%;
+  }
+  .hero-text h1 {
+    font-size: 28px;
+    margin-bottom: 10px;
+  }
+  .hero-text p {
+    font-size: 13px;
+  }
+
+  .sticky-control {
+    top: 50px;
+    padding: 15px 0;
+    background: white;
+  }
+  .control-inner {
+    flex-direction: column;
+    gap: 20px;
+    padding: 0 20px;
+    align-items: stretch;
+  }
+  .sticky-control.scrolled .budget-group {
+    display: none !important;
+  }
+  .sticky-control.scrolled .control-inner {
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .sticky-control.scrolled {
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+  }
+  .sticky-control.scrolled .gauge-group {
+    width: 70%;
+    margin: 0;
+  }
+  .sticky-control.scrolled .flex-group {
+    width: 30%;
+    border-top: none;
+    padding-top: 0;
+    justify-content: flex-end;
+  }
+  .budget-group {
+    width: 100%;
+    align-items: center;
+  }
+  .gauge-group {
+    width: 100%;
+    margin-top: 0;
+  }
+  .flex-group {
+    margin-left: 0;
+    border-left: none;
+    padding-left: 0;
+    border-top: 1px solid #eee;
+    padding-top: 15px;
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .matcher-section {
+    padding-top: 20px;
+  }
+  .match-row {
+    height: 320px;
+  }
+  .scroll-arrow {
+    display: none;
+  }
+  .scroll-area {
+    gap: 15px;
+    padding: 0 calc(50% - 42.5vw);
+  }
+  .card {
+    flex: 0 0 85vw;
+    height: 280px;
+  }
+  .img-box {
+    height: 180px;
+    padding: 5px;
+  }
+
+  /* [모바일 모달 전체 크기] */
+  .modal-detail-box {
+    height: 90vh;
+    width: 90%;
+    overflow: hidden;
+  }
+
+  /* 레이아웃: 세로 배치 */
+  .detail-layout {
+    display: flex;
+    flex-direction: column !important;
+    width: 100%;
+    height: 100%;
+  }
+
+  .close-btn {
+    position: fixed;
+    top: 7vh;
+    right: 7vw;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+
+  /* [수정] 닫기(X) 버튼의 왼쪽 옆에 배치 */
+  .close-video {
+    position: absolute;
+    top: auto; /* 상단 위치 해제 */
+    bottom: 15px; /* [핵심] 사진 영역의 바닥에서 15px 위로 */
+    right: 15px; /* [핵심] 오른쪽 여백 */
+    left: auto; /* 왼쪽 설정 해제 */
+
+    /* 디자인 스타일 */
+    background: rgba(255, 255, 255, 0.9); /* 약간 투명하게 해서 고급스럽게 */
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    z-index: 25;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15); /* 그림자 살짝 진하게 */
+    cursor: pointer;
+    backdrop-filter: blur(4px); /* 배경 흐림 효과 추가 (선택사항) */
+  }
+  /* 1. 이미지 영역 (55%로 확대) */
+  .detail-left {
+    width: 100%;
+    height: 55%;
+    flex: none;
+    position: relative;
+    background: #f9f9f9;
+  }
+  .detail-img {
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  /* 2. 하단 콘텐츠 영역 (45%) */
+  .detail-right {
+    width: 100%;
+    height: 45%;
+    flex: none;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* [모바일 순서 재배치: 사진 -> AI버튼 -> 텍스트 -> 구매] */
+
+  /* (Order 1) AI 피팅 버튼: 사진 바로 아래 */
+  .video-btn {
+    order: 1;
+    width: 100%;
+    margin: 0 0 15px 0;
+    padding: 10px;
+    background: #f5f5f5;
+  }
+
+  /* (Order 2) 텍스트 설명 영역 */
+  .d-scroll-area {
+    order: 2;
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 0;
+    margin-bottom: 10px;
+  }
+  .d-top {
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+  }
+  .d-name {
+    font-size: 22px;
+  }
+
+  /* (Order 3) 구매 버튼 */
+  .d-fixed-group {
+    order: 3;
+    flex: none;
+    padding: 0;
+    border-top: none;
+    background: white;
+  }
 }

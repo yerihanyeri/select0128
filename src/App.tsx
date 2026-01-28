@@ -155,17 +155,14 @@ const PRODUCTS: Product[] = [
 const MIN_PRICE = Math.min(...PRODUCTS.map((p) => p.price));
 
 function App() {
-  // --- States ---
   const [budget, setBudget] = useState<number>(MIN_PRICE);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [flexMode, setFlexMode] = useState<boolean>(false);
   const [isCartOpen, setIsCartOpen] = useState<boolean>(false);
   const [budgetOverride, setBudgetOverride] = useState<boolean>(false);
+  const [isScrolled, setIsScrolled] = useState<boolean>(false);
 
-  // Refs
   const budgetRef = useRef<HTMLElement>(null);
-
-  // Modal States
   const [alertInfo, setAlertInfo] = useState<{
     isOpen: boolean;
     msg: React.ReactNode;
@@ -175,7 +172,6 @@ function App() {
   const [detailQty, setDetailQty] = useState<number>(1);
   const [showVideo, setShowVideo] = useState<boolean>(false);
 
-  // --- Derived State ---
   const totalSpent = cart.reduce((sum, item) => {
     const p = PRODUCTS.find((prod) => prod.id === item.id);
     return sum + (p ? p.price * item.qty : 0);
@@ -184,7 +180,18 @@ function App() {
   const remaining = budget - totalSpent;
   const progressPercent = Math.min(100, (totalSpent / budget) * 100);
 
-  // --- Logic Helpers ---
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 50) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   const checkBudget = (costToAdd: number): boolean => {
     if (flexMode || budgetOverride) return true;
     if (totalSpent + costToAdd > budget) {
@@ -286,6 +293,7 @@ function App() {
     setAlertInfo({ isOpen: false, msg: "" });
   };
 
+  // [수정된 부분] 예산 바로 정확히 이동
   const handleGoToBudget = () => {
     setAlertInfo({ isOpen: false, msg: "" });
     if (budgetRef.current) {
@@ -301,7 +309,6 @@ function App() {
 
   return (
     <div className="App">
-      {/* Header */}
       <header>
         <div className="logo" onClick={() => window.scrollTo(0, 0)}>
           SELECT.
@@ -323,7 +330,6 @@ function App() {
         </div>
       </header>
 
-      {/* Hero */}
       <section className="hero-section">
         <video autoPlay muted loop playsInline className="hero-video">
           <source
@@ -337,10 +343,12 @@ function App() {
         </div>
       </section>
 
-      {/* Control Panel */}
-      <section className="sticky-control" ref={budgetRef}>
+      <section
+        className={`sticky-control ${isScrolled ? "scrolled" : ""}`}
+        ref={budgetRef}
+        id="budget-bar-section"
+      >
         <div className="control-inner">
-          {/* [수정] Budget Group: 슬라이더를 여기로 이동하여 '조작' 기능 통합 */}
           <div className="budget-group">
             <div className="label">SHOPPING BUDGET</div>
             <div className="budget-top-row">
@@ -373,7 +381,6 @@ function App() {
               </button>
             </div>
 
-            {/* 슬라이더가 이제 여기 위치합니다 */}
             <input
               type="range"
               className="slider"
@@ -391,7 +398,6 @@ function App() {
             </div>
           </div>
 
-          {/* Gauge Group: 순수 '현황판' 역할만 수행 */}
           <div className="gauge-group">
             <div className="status-text">
               <span>{flexMode ? "현재 지출" : "남은 예산"}</span>
@@ -416,7 +422,6 @@ function App() {
             </div>
           </div>
 
-          {/* Flex Toggle */}
           <div className="flex-group">
             <span
               style={{
@@ -439,7 +444,6 @@ function App() {
         </div>
       </section>
 
-      {/* Matcher */}
       <section className="matcher-section">
         <div className="guide-text">
           카드를 클릭하면 중앙으로 이동합니다.
@@ -487,7 +491,6 @@ function App() {
         <p>&copy; 2026 Select Corp. All rights reserved.</p>
       </footer>
 
-      {/* Cart Drawer */}
       <div
         className={`overlay ${isCartOpen ? "show" : ""}`}
         style={{ display: isCartOpen ? "block" : "none" }}
@@ -554,7 +557,6 @@ function App() {
         </div>
       </div>
 
-      {/* Detail Modal */}
       {detailProduct && (
         <div className="overlay" onClick={() => setDetailProduct(null)}>
           <div
@@ -567,10 +569,7 @@ function App() {
             >
               <X />
             </button>
-            <div
-              className="detail-layout"
-              style={{ display: "flex", width: "100%", height: "100%" }}
-            >
+            <div className="detail-layout">
               <div className="detail-left">
                 <img
                   src={detailProduct.img}
@@ -594,48 +593,60 @@ function App() {
                   />
                 </div>
               </div>
+
               <div className="detail-right">
-                <div className="d-top">
-                  <h2 className="d-name">{detailProduct.name}</h2>
-                  <p className="d-cat">
-                    {detailProduct.category.toUpperCase()}
-                  </p>
-                  <div className="d-price">
-                    ₩{detailProduct.price.toLocaleString()}
+                {/* [수정] 버튼 위치 변경 및 구조 단순화 */}
+
+                {/* 텍스트 정보 */}
+                <div className="d-scroll-area">
+                  <div className="d-top">
+                    <h2 className="d-name">{detailProduct.name}</h2>
+                    <p className="d-cat">
+                      {detailProduct.category.toUpperCase()}
+                    </p>
+                    <div className="d-price">
+                      ₩{detailProduct.price.toLocaleString()}
+                    </div>
+                  </div>
+                  <div className="d-mid">
+                    <p className="d-desc">{detailProduct.desc}</p>
                   </div>
                 </div>
-                <div className="d-mid">
-                  <p className="d-desc">{detailProduct.desc}</p>
-                  <button
-                    className="video-btn"
-                    onClick={() => setShowVideo(true)}
-                  >
-                    <Play size={14} /> AI 피팅 영상 보기
-                  </button>
-                </div>
-                <div className="d-bot">
-                  <div className="qty-select">
+
+                {/* AI 피팅 버튼 (모바일에서 order로 위치 제어) */}
+                <button
+                  className="video-btn"
+                  onClick={() => setShowVideo(true)}
+                >
+                  <Play size={14} fill="black" /> AI 피팅 영상 보기
+                </button>
+
+                {/* 하단 구매 버튼 그룹 */}
+                <div className="d-fixed-group">
+                  <div className="action-row">
+                    <div className="qty-select">
+                      <button
+                        onClick={() => setDetailQty(Math.max(1, detailQty - 1))}
+                      >
+                        -
+                      </button>
+                      <span>{detailQty}</span>
+                      <button onClick={() => setDetailQty(detailQty + 1)}>
+                        +
+                      </button>
+                    </div>
                     <button
-                      onClick={() => setDetailQty(Math.max(1, detailQty - 1))}
+                      className="add-btn"
+                      onClick={() => {
+                        handleAddToCart(detailProduct.id, detailQty);
+                        setDetailProduct(null);
+                      }}
                     >
-                      -
-                    </button>
-                    <span>{detailQty}</span>
-                    <button onClick={() => setDetailQty(detailQty + 1)}>
-                      +
+                      {cart.find((i) => i.id === detailProduct.id)
+                        ? "추가 담기"
+                        : "장바구니 담기"}
                     </button>
                   </div>
-                  <button
-                    className="add-btn"
-                    onClick={() => {
-                      handleAddToCart(detailProduct.id, detailQty);
-                      setDetailProduct(null);
-                    }}
-                  >
-                    {cart.find((i) => i.id === detailProduct.id)
-                      ? "추가 담기"
-                      : "장바구니 담기"}
-                  </button>
                 </div>
               </div>
             </div>
@@ -643,7 +654,6 @@ function App() {
         </div>
       )}
 
-      {/* Alert Modal */}
       {alertInfo.isOpen && (
         <div className="overlay">
           <div className="modal-box">
@@ -670,7 +680,7 @@ function App() {
   );
 }
 
-// Sub Component: MatchRow
+// Sub Component
 const MatchRow = ({
   title,
   items,
@@ -719,10 +729,8 @@ const MatchRow = ({
       const cards = Array.from(
         container.querySelectorAll(".card"),
       ) as HTMLElement[];
-
       let closest: HTMLElement | null = null;
       let minDiff = Infinity;
-
       for (const card of cards) {
         const center = card.offsetLeft + card.offsetWidth / 2;
         const diff = Math.abs(centerPoint - center);
@@ -731,15 +739,11 @@ const MatchRow = ({
           closest = card;
         }
       }
-
       if (closest) {
         const idStr = closest.getAttribute("data-id");
-        if (idStr) {
-          setActiveId(Number(idStr));
-        }
+        if (idStr) setActiveId(Number(idStr));
       }
     };
-
     container.addEventListener("scroll", handleScroll);
     return () => container.removeEventListener("scroll", handleScroll);
   }, []);
@@ -753,7 +757,6 @@ const MatchRow = ({
       >
         <ChevronLeft />
       </button>
-
       <div className="scroll-area" ref={scrollRef}>
         {items.map((p) => {
           const isInCart = cart.some((i) => i.id === p.id);
@@ -767,7 +770,6 @@ const MatchRow = ({
               <div className="img-box">
                 <img src={p.img} alt={p.name} />
               </div>
-
               <button
                 className="cart-btn-mini"
                 onClick={(e) => {
@@ -777,7 +779,6 @@ const MatchRow = ({
               >
                 {isInCart ? <Check size={18} /> : <Plus size={18} />}
               </button>
-
               <div className="info-box">
                 <div className="p-name">{p.name}</div>
                 <div className="p-price">₩{p.price.toLocaleString()}</div>
@@ -786,7 +787,6 @@ const MatchRow = ({
           );
         })}
       </div>
-
       <button
         className="scroll-arrow right"
         onClick={() => handleScrollArrow(1)}
