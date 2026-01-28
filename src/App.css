@@ -1,38 +1,788 @@
-.App {
-  text-align: center;
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
+
+:root {
+  --bg: #ffffff;
+  --text: #111;
+  --gray: #888;
+  --light-gray: #f5f5f5;
+  --accent: #000;
+  --border: #e0e0e0;
+  --danger: #ff3b30;
 }
 
-.App-logo {
-  height: 40vmin;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Pretendard", sans-serif;
+}
+body {
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+}
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+/* 헤더: 컴팩트 유지 */
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  background: rgba(255, 255, 255, 0.95);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 40px;
+  z-index: 1000;
+  backdrop-filter: blur(5px);
+}
+.logo {
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: -1px;
+  cursor: pointer;
+}
+.h-right {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  font-size: 13px;
+  font-weight: 600;
+}
+.nav-link {
+  text-decoration: none;
+  color: var(--text);
+  font-weight: 600;
+  font-size: 13px;
+}
+.cart-icon-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+.badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: var(--accent);
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 히어로 섹션 */
+.hero-section {
+  position: relative;
+  width: 100%;
+  height: 600px;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 60px;
+}
+.hero-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.8;
+}
+.hero-text {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  color: black;
+  background: rgba(255, 255, 255, 0.7);
+  padding: 40px 60px;
+  backdrop-filter: blur(5px);
+}
+.hero-text h1 {
+  font-size: 50px;
+  font-weight: 300;
+  text-transform: uppercase;
+  margin-bottom: 15px;
+  letter-spacing: 2px;
+}
+.hero-text p {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+
+/* 컨트롤 패널 */
+.sticky-control {
+  position: sticky;
+  top: 60px;
+  z-index: 900;
+  background: white;
+  border-bottom: 1px solid var(--border);
+  padding: 12px 0;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+.control-inner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 50px;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* [수정] 예산 그룹: 슬라이더 포함을 위해 정렬 방식 변경 */
+.budget-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+.budget-top-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.label {
+  font-size: 10px;
+  font-weight: 800;
+  color: var(--gray);
+  letter-spacing: 1px;
+  align-self: flex-start;
+  margin-bottom: 3px;
+}
+.adj-btn {
+  width: 26px;
+  height: 26px;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.2s;
+}
+.adj-btn:hover {
+  background: black;
+  color: white;
+  border-color: black;
+}
+.input-display {
+  display: flex;
+  align-items: center;
+  border-bottom: 2px solid black;
+}
+.input-display span {
+  font-weight: 700;
+  font-size: 17px;
+  margin-right: 5px;
+}
+.input-display input {
+  border: none;
+  width: 105px;
+  text-align: right;
+  font-size: 19px;
+  font-weight: 700;
+  outline: none;
+}
+.min-msg {
+  font-size: 10px;
+  color: #999;
+  margin-top: 2px;
+  align-self: flex-start;
+}
+
+/* [수정] 슬라이더 스타일 (왼쪽으로 이동됨) */
+.slider {
+  width: 100%;
+  height: 4px;
+  accent-color: black;
+  cursor: pointer;
+}
+
+/* [수정] 게이지 그룹: 슬라이더 제거하고 순수 현황판으로 변경 */
+.gauge-group {
+  width: 380px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.status-text {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: 600;
+}
+.track {
+  width: 100%;
+  height: 9px;
+  background: #eee;
+  border-radius: 5px;
+  overflow: hidden;
+}
+.fill {
+  height: 100%;
+  background: var(--accent);
+  transition:
+    width 0.5s ease,
+    background 0.3s;
+}
+
+.flex-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  margin-left: 20px;
+  border-left: 1px solid #eee;
+  padding-left: 20px;
+}
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 42px;
+  height: 22px;
+}
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.slider-toggle {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 34px;
+}
+.slider-toggle:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+input:checked + .slider-toggle {
+  background-color: var(--accent);
+}
+input:checked + .slider-toggle:before {
+  transform: translateX(20px);
+}
+
+/* 매처 섹션 */
+.matcher-section {
+  position: relative;
+  padding: 20px 0 40px 0;
+  background: #fafafa;
+}
+.guide-text {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #666;
+  font-size: 12px;
+}
+.center-line {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 1px;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.05);
+  transform: translateX(-50%);
   pointer-events: none;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+/* 행 높이 */
+.match-row {
+  position: relative;
+  width: 100%;
+  height: 430px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 0;
+}
+.row-label {
+  position: absolute;
+  left: 30px;
+  font-size: 11px;
+  font-weight: 800;
+  color: #ccc;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  letter-spacing: 2px;
+}
+.scroll-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 20;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid #eee;
+  background: rgba(255, 255, 255, 0.95);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: 0.2s;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+.scroll-arrow:hover {
+  background: black;
+  color: white;
+  border-color: black;
+}
+.scroll-arrow.left {
+  left: 70px;
+}
+.scroll-arrow.right {
+  right: 70px;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.scroll-area {
+  display: flex;
+  gap: 35px;
+  overflow-x: auto;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  padding: 0 calc(50% - 145px);
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  scroll-snap-type: x mandatory;
+}
+.scroll-area::-webkit-scrollbar {
+  display: none;
+}
+
+/* 카드 크기 */
+.card {
+  flex: 0 0 290px;
+  height: 350px;
+  position: relative;
+  cursor: pointer;
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
+  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  opacity: 0.5;
+  transform: scale(0.92);
+  background: white;
+  border-radius: 4px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+}
+
+/* 활성 카드 */
+.card.active {
+  opacity: 1;
+  transform: scale(1.1);
+  z-index: 10;
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.12);
+  border: 1px solid black;
+}
+
+/* 이미지 영역 */
+.img-box {
+  width: 100%;
+  height: 260px;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.img-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+}
+
+.cart-btn-mini {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: white;
+  border: 1px solid #ddd;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 20;
+  transition: 0.2s;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+.cart-btn-mini:hover {
+  background: black;
   color: white;
+  border-color: black;
+}
+.card.selected .cart-btn-mini {
+  background: black;
+  color: white;
+  border-color: black;
 }
 
-.App-link {
-  color: #61dafb;
+.info-box {
+  text-align: center;
+  margin-top: 5px;
+  opacity: 0;
+  transition: 0.3s;
+  transform: translateY(10px);
+}
+.card.active .info-box {
+  opacity: 1;
+  transform: translateY(0);
+}
+.p-name {
+  font-size: 15px;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 220px;
+}
+.p-price {
+  font-size: 14px;
+  font-weight: 400;
+  color: #555;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* 오버레이 & 모달 */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 2000;
+  backdrop-filter: blur(5px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.modal-box {
+  background: white;
+  width: 450px;
+  padding: 40px;
+  text-align: center;
+  border-radius: 8px;
+}
+.modal-detail-box {
+  background: white;
+  width: 1000px;
+  max-width: 90%;
+  height: 600px;
+  display: flex;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+}
+
+.modal-btn-group {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 25px;
+  flex-wrap: wrap;
+}
+.sub-btn {
+  width: auto;
+  padding: 10px 20px;
+  border-radius: 4px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  font-weight: 600;
+}
+.main-btn {
+  width: auto;
+  padding: 10px 20px;
+  border-radius: 4px;
+  background: black;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.detail-left {
+  flex: 1.2;
+  background: #f9f9f9;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+.detail-img {
+  width: 80%;
+  height: 80%;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+}
+
+/* Video Overlay */
+.video-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #f9f9f9;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.3s ease,
+    visibility 0.3s;
+}
+.video-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+.detail-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.ai-tag {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 6px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 4px;
+  z-index: 20;
+}
+.close-video {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: white;
+  padding: 8px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  z-index: 25;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
+.close-video:hover {
+  background: #f0f0f0;
+}
+
+.detail-right {
+  flex: 0.8;
+  padding: 50px;
+  display: flex;
+  flex-direction: column;
+}
+.close-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 24px;
+}
+.d-top {
+  border-bottom: 1px solid #eee;
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+}
+.d-name {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+.d-cat {
+  color: #888;
+  font-size: 14px;
+  margin-bottom: 15px;
+}
+.d-price {
+  font-size: 24px;
+  font-weight: 700;
+}
+.d-mid {
+  flex: 1;
+  overflow-y: auto;
+}
+.d-desc {
+  font-size: 15px;
+  line-height: 1.6;
+  color: #444;
+  margin-bottom: 20px;
+}
+.video-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: #eee;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  transition: 0.2s;
+}
+.video-btn:hover {
+  background: #ddd;
+}
+
+.d-bot {
+  margin-top: 20px;
+  display: flex;
+  gap: 10px;
+}
+.qty-select {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ddd;
+  height: 50px;
+}
+.qty-select button {
+  width: 40px;
+  height: 100%;
+  font-size: 18px;
+}
+.qty-select span {
+  width: 40px;
+  text-align: center;
+  font-weight: 700;
+}
+.add-btn {
+  flex: 1;
+  height: 50px;
+  background: black;
+  color: white;
+  font-weight: 700;
+  font-size: 16px;
+  transition: 0.2s;
+}
+.add-btn:hover {
+  opacity: 0.8;
+}
+
+.cart-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 400px;
+  height: 100%;
+  background: white;
+  z-index: 2001;
+  box-shadow: -5px 0 30px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 0.3s ease-in-out;
+}
+.cart-drawer.open {
+  transform: translateX(0);
+}
+.cart-header {
+  padding: 25px;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.cart-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 25px;
+}
+.cart-item {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #f5f5f5;
+  padding-bottom: 20px;
+}
+.cart-item img {
+  width: 60px;
+  height: 80px;
+  object-fit: contain;
+}
+.cart-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.cart-ctrl {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 5px;
+}
+.c-btn {
+  width: 24px;
+  height: 24px;
+  border: 1px solid #ddd;
+  background: white;
+  border-radius: 50%;
+}
+.cart-footer {
+  padding: 30px;
+  border-top: 1px solid #eee;
+  background: #fafafa;
+}
+.total-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 18px;
+  font-weight: 800;
+  margin-bottom: 20px;
+}
+.checkout {
+  width: 100%;
+  padding: 15px;
+  background: black;
+  color: white;
+  font-weight: 700;
+}
+
+footer {
+  background: #111;
+  color: #888;
+  padding: 60px 40px;
+  text-align: center;
+  font-size: 12px;
 }
